@@ -2,7 +2,7 @@ package com.example.layeredarchitecture.view.tdm;
 
 
 
-public class  CustomerTM implements Comparable<CustomerTM> {
+public class  CustomerTM extends OrderDetailTM implements Comparable<CustomerTM> {
     private String id;
     private String name;
     private String address;
@@ -14,6 +14,10 @@ public class  CustomerTM implements Comparable<CustomerTM> {
         this.id = id;
         this.name = name;
         this.address = address;
+    }
+
+    public CustomerTM(String id) {
+        this.id = id;
     }
 
     public String getId() {

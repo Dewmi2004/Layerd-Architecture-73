@@ -115,7 +115,7 @@ public class ManageCustomersFormController {
         txtCustomerName.setDisable(false);
         txtCustomerAddress.setDisable(false);
         txtCustomerId.clear();
-        txtCustomerId.setText(generateNewId());
+        txtCustomerId.setText(generateNewId(""));
         txtCustomerName.clear();
         txtCustomerAddress.clear();
         txtCustomerName.requestFocus();
@@ -181,11 +181,10 @@ public class ManageCustomersFormController {
     }
 
 
-    boolean existCustomer(String id) throws SQLException, ClassNotFoundException {
-        Connection connection = DBConnection.getDbConnection().getConnection();
-        PreparedStatement pstm = connection.prepareStatement("SELECT id FROM Customer WHERE id=?");
-        pstm.setString(1, id);
-        return pstm.executeQuery().next();
+   public boolean existCustomer(String id) throws SQLException, ClassNotFoundException {
+       CustomerDaoImpl customerDao = new CustomerDaoImpl();
+      return customerDao.existCustomer(id);
+
     }
 
 
@@ -196,33 +195,21 @@ public class ManageCustomersFormController {
             if (!existCustomer(id)) {
                 new Alert(Alert.AlertType.ERROR, "There is no such customer associated with the id " + id).show();
             }
-            Connection connection = DBConnection.getDbConnection().getConnection();
-            PreparedStatement pstm = connection.prepareStatement("DELETE FROM Customer WHERE id=?");
-            pstm.setString(1, id);
-            pstm.executeUpdate();
-
+          CustomerDaoImpl customerDao = new CustomerDaoImpl();
+            customerDao.DeleteCustomer(id);
             tblCustomers.getItems().remove(tblCustomers.getSelectionModel().getSelectedItem());
             tblCustomers.getSelectionModel().clearSelection();
             initUI();
 
-        } catch (SQLException e) {
+        } catch (Exception e) {
             new Alert(Alert.AlertType.ERROR, "Failed to delete the customer " + id).show();
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
         }
     }
 
-    private String generateNewId() {
+    private String generateNewId(String id) {
         try {
-            Connection connection = DBConnection.getDbConnection().getConnection();
-            ResultSet rst = connection.createStatement().executeQuery("SELECT id FROM Customer ORDER BY id DESC LIMIT 1;");
-            if (rst.next()) {
-                String id = rst.getString("id");
-                int newCustomerId = Integer.parseInt(id.replace("C00-", "")) + 1;
-                return String.format("C00-%03d", newCustomerId);
-            } else {
-                return "C00-001";
-            }
+           CustomerDaoImpl customerDao = new CustomerDaoImpl();
+          return customerDao.Genarateid();
         } catch (SQLException e) {
             new Alert(Alert.AlertType.ERROR, "Failed to generate a new id " + e.getMessage()).show();
         } catch (ClassNotFoundException e) {
@@ -233,7 +220,7 @@ public class ManageCustomersFormController {
         if (tblCustomers.getItems().isEmpty()) {
             return "C00-001";
         } else {
-            String id = getLastCustomerId();
+             id = getLastCustomerId();
             int newCustomerId = Integer.parseInt(id.replace("C", "")) + 1;
             return String.format("C00-%03d", newCustomerId);
         }
