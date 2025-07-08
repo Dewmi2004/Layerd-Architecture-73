@@ -37,6 +37,7 @@ public class CustomerDaoImpl {
         pstm.setString(2, customerDTO.getAddress());
         pstm.setString(3, customerDTO.getId());
         pstm.executeUpdate();
+
     }
     public boolean existCustomer(String id) throws SQLException, ClassNotFoundException {
         Connection connection = DBConnection.getDbConnection().getConnection();
