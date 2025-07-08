@@ -30,7 +30,7 @@ public class ItemDaoimpl {
     }
     public void UpdateItem(ItemDTO item) throws ClassNotFoundException, SQLException {
         Connection connection = DBConnection.getDbConnection().getConnection();
-        PreparedStatement pstm = connection.prepareStatement("UPDATE Item SET description=?, unitPrice=?, qtyOnHand=? WHERE code=?");
+        PreparedStatement pstm = connection.prepareStatement("UPDATE Item SET descrption=?, unitPrice=?, qtyOnHand=? WHERE code=?");
         pstm.setString(1, item.getDescription());
         pstm.setBigDecimal(2, item.getUnitPrice());
         pstm.setInt(3, item.getQtyOnHand());
