@@ -1,4 +1,4 @@
-package com.example.layeredarchitecture.Dao;
+package com.example.layeredarchitecture.Dao.custom;
 
 import com.example.layeredarchitecture.db.DBConnection;
 import com.example.layeredarchitecture.model.ItemDTO;
@@ -8,7 +8,7 @@ import java.sql.*;
 import java.util.ArrayList;
 
 public interface ItemDao {
-    public ArrayList<ItemDTO> getAllItems() throws SQLException, ClassNotFoundException ;
+    public ArrayList<ItemDTO>  getAllItems() throws SQLException, ClassNotFoundException ;
     public boolean excistItem(String code) throws SQLException, ClassNotFoundException ;
     public boolean UpdateItem(ItemDTO item) throws ClassNotFoundException, SQLException ;
     public boolean DeleteItem(String item) throws ClassNotFoundException, SQLException ;

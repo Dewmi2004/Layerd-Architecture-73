@@ -1,5 +1,6 @@
-package com.example.layeredarchitecture.Dao;
+package com.example.layeredarchitecture.Dao.custom.impl;
 
+import com.example.layeredarchitecture.Dao.custom.OrderDetailDao;
 import com.example.layeredarchitecture.db.DBConnection;
 import com.example.layeredarchitecture.model.OrderDetailDTO;
 
