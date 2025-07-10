@@ -72,7 +72,7 @@ public class ManageItemsFormController {
         try {
             /*Get all items*/
 
-         ArrayList<ItemDTO> itemDTOS = itemDaoimpl.getAllItems();
+         ArrayList<ItemDTO> itemDTOS = itemDaoimpl.getAll();
          for (ItemDTO itemDTO : itemDTOS) {
              tblItems.getItems().add(new ItemTM(
                      itemDTO.getCode(),
@@ -139,7 +139,7 @@ public class ManageItemsFormController {
                 new Alert(Alert.AlertType.ERROR, "There is no such item associated with the id " + code).show();
             }
 
-            itemDaoimpl.DeleteItem(code);
+            itemDaoimpl.Delete(code);
 
             tblItems.getItems().remove(tblItems.getSelectionModel().getSelectedItem());
             tblItems.getSelectionModel().clearSelection();
@@ -180,7 +180,7 @@ public class ManageItemsFormController {
                 }
                 //Save Item
 
-                itemDaoimpl.SaveItem(new ItemDTO(code, description, unitPrice, qtyOnHand));
+                itemDaoimpl.Save(new ItemDTO(code, description, unitPrice, qtyOnHand));
                 tblItems.getItems().add(new ItemTM(code, description, unitPrice, qtyOnHand));
 
             } catch (SQLException e) {
@@ -196,7 +196,7 @@ public class ManageItemsFormController {
                 }
                 /*Update Item*/
 
-              itemDaoimpl.UpdateItem(new ItemDTO(description, unitPrice, qtyOnHand,code));
+              itemDaoimpl.update(new ItemDTO(description, unitPrice, qtyOnHand,code));
 
                 ItemTM selectedItem = tblItems.getSelectionModel().getSelectedItem();
                 selectedItem.setDescription(description);
@@ -216,14 +216,14 @@ public class ManageItemsFormController {
 
     private boolean existItem(String code) throws SQLException, ClassNotFoundException {
 
-        return itemDaoimpl.excistItem(code);
+        return itemDaoimpl.exist(code);
     }
 
 
     private String generateNewId() {
         try {
 
-        return   itemDaoimpl.genarateId();
+        return   itemDaoimpl.Genaratenewid();
         } catch (SQLException e) {
             new Alert(Alert.AlertType.ERROR, e.getMessage()).show();
         } catch (ClassNotFoundException e) {

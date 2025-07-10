@@ -1,13 +1,10 @@
 package com.example.layeredarchitecture.Dao.custom;
 
-import com.example.layeredarchitecture.db.DBConnection;
+import com.example.layeredarchitecture.Dao.CrudDao;
 import com.example.layeredarchitecture.model.OrderDetailDTO;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
-public interface OrderDetailDao {
-    public boolean InsertorderDetail(OrderDetailDTO orderDetailDTO) throws SQLException, ClassNotFoundException;
+public interface OrderDetailDao extends CrudDao<OrderDetailDTO> {
 
 }

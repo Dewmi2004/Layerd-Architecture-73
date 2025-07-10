@@ -71,7 +71,7 @@ public class ManageCustomersFormController {
         tblCustomers.getItems().clear();
         /*Get all customers*/
         try {
-          ArrayList<CustomerDTO> allcustomer =  customerDao.getAllCustomer();
+          ArrayList<CustomerDTO> allcustomer =  customerDao.getAll();
            for (CustomerDTO customer : allcustomer) {
                tblCustomers.getItems().add(new CustomerTM(
                        customer.getId(),
@@ -149,7 +149,7 @@ public class ManageCustomersFormController {
                 }
 
 
-                customerDao.SaveCustomer(new CustomerDTO(id,name,address));
+           customerDao.Save(new CustomerDTO(id,name,address));
                 tblCustomers.getItems().add(new CustomerTM(id, name, address));
             } catch (SQLException e) {
                 new Alert(Alert.AlertType.ERROR, "Failed to save the customer " + e.getMessage()).show();
@@ -165,7 +165,7 @@ public class ManageCustomersFormController {
                     new Alert(Alert.AlertType.ERROR, "There is no such customer associated with the id " + id).show();
                 }
 
-                customerDao.updateCustomer( new CustomerDTO (id,name,address));
+               boolean b2 = customerDao.update( new CustomerDTO (id,name,address));
             } catch (SQLException e) {
                 new Alert(Alert.AlertType.ERROR, "Failed to update the customer " + id + e.getMessage()).show();
             } catch (ClassNotFoundException e) {
@@ -184,7 +184,7 @@ public class ManageCustomersFormController {
 
    public boolean existCustomer(String id) throws SQLException, ClassNotFoundException {
 
-      return customerDao.existCustomer(id);
+      return customerDao.exist(id);
 
     }
 
@@ -197,7 +197,7 @@ public class ManageCustomersFormController {
                 new Alert(Alert.AlertType.ERROR, "There is no such customer associated with the id " + id).show();
             }
 
-            customerDao.DeleteCustomer(id);
+          boolean b3 =  customerDao.Delete(id);
             tblCustomers.getItems().remove(tblCustomers.getSelectionModel().getSelectedItem());
             tblCustomers.getSelectionModel().clearSelection();
             initUI();
@@ -210,7 +210,7 @@ public class ManageCustomersFormController {
     private String generateNewId(String id) {
         try {
 
-          return customerDao.Genarateid();
+          return customerDao.Genaratenewid();
         } catch (SQLException e) {
             new Alert(Alert.AlertType.ERROR, "Failed to generate a new id " + e.getMessage()).show();
         } catch (ClassNotFoundException e) {
