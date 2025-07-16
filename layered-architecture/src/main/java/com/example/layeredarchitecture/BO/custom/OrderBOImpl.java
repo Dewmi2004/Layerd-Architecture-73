@@ -1,0 +1,123 @@
+package com.example.layeredarchitecture.BO.custom;
+
+import com.example.layeredarchitecture.BO.custom.impl.OrderBO;
+import com.example.layeredarchitecture.Dao.DAOFactory;
+import com.example.layeredarchitecture.Dao.custom.CustomerDao;
+import com.example.layeredarchitecture.Dao.custom.ItemDao;
+import com.example.layeredarchitecture.Dao.custom.OrderDao;
+import com.example.layeredarchitecture.Dao.custom.OrderDetailDao;
+import com.example.layeredarchitecture.Dao.custom.impl.CustomerDaoImpl;
+import com.example.layeredarchitecture.Dao.custom.impl.ItemDaoimpl;
+import com.example.layeredarchitecture.Dao.custom.impl.OrderDaoimpl;
+import com.example.layeredarchitecture.Dao.custom.impl.OrderDetailDaoimpl;
+import com.example.layeredarchitecture.db.DBConnection;
+import com.example.layeredarchitecture.model.CustomerDTO;
+import com.example.layeredarchitecture.model.ItemDTO;
+import com.example.layeredarchitecture.model.OrderDTO;
+import com.example.layeredarchitecture.model.OrderDetailDTO;
+
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+
+public class OrderBOImpl implements OrderBO {
+    OrderDao orderDao = (OrderDao) DAOFactory.getInstance().getDAO(DAOFactory.DAOtypes.ORDER);
+CustomerDao customerDao = (CustomerDao) DAOFactory.getInstance().getDAO(DAOFactory.DAOtypes.CUSTOMER);
+ItemDao itemDao = (ItemDao) DAOFactory.getInstance().getDAO(DAOFactory.DAOtypes.ITEM);
+OrderDetailDao orderDetailDao = (OrderDetailDao) DAOFactory.getInstance().getDAO(DAOFactory.DAOtypes.ORDERDETAILS);
+
+    @Override
+    public String GetNewIdOrder() throws SQLException, ClassNotFoundException {
+        return orderDao.Genaratenewid();
+    }
+    @Override
+    public CustomerDTO searchCustomer(String s) throws SQLException, ClassNotFoundException {
+        return customerDao.search(s);
+    }
+    @Override
+    public ItemDTO searchItem(String s) throws SQLException, ClassNotFoundException {
+        return itemDao.search(s);
+    }
+
+    @Override
+    public boolean ExistItem(String id) throws SQLException, ClassNotFoundException {
+        return itemDao.exist(id);
+    }
+
+    @Override
+    public boolean ExistCustomer(String id) throws SQLException, ClassNotFoundException {
+        return customerDao.exist(id);
+    }
+
+    @Override
+    public ArrayList<CustomerDTO> getAllCustomer() throws SQLException, ClassNotFoundException {
+        return customerDao.getAll();
+    }
+
+    @Override
+    public ArrayList<ItemDTO> getAllItem() throws SQLException, ClassNotFoundException {
+        return itemDao.getAll();
+    }
+
+    @Override
+    public boolean placeOrder(String orderId, LocalDate orderDate, String customerId, List<OrderDetailDTO> orderDetails) throws SQLException, ClassNotFoundException {
+        Connection connection = null;
+        connection= DBConnection.getDbConnection().getConnection();
+        //exits order id?
+        boolean b1=orderDao.exist(orderId);
+        /*if order id already exist*/
+        if (b1) {
+            return false;
+        }
+        connection.setAutoCommit(false);
+        boolean b2=orderDao.Save(new OrderDTO(orderId,orderDate,customerId));
+        //save oder
+        if (!b2) {
+            connection.rollback();
+            connection.setAutoCommit(true);
+            return false;
+        }
+        //save order details
+        for (OrderDetailDTO detail : orderDetails) {
+            boolean b3=orderDetailDao.Save(detail);
+
+            if (!b3) {
+                connection.rollback();
+                connection.setAutoCommit(true);
+                return false;
+            }
+
+            //Search & Update Item
+            ItemDTO item = findItem(detail.getItemCode());
+            item.setQtyOnHand(item.getQtyOnHand() - detail.getQty());
+
+            //update item
+            boolean b4=itemDao.update(item);
+
+            if (!b4) {
+                connection.rollback();
+                connection.setAutoCommit(true);
+                return false;
+            }
+        }
+
+        connection.commit();
+        connection.setAutoCommit(true);
+        return true;
+    }
+
+    @Override
+    public ItemDTO findItem(String id) throws SQLException, ClassNotFoundException {
+        try {
+            return itemDao.search(id);
+        }catch (SQLException e){
+            throw new RuntimeException("failed to find item" + id,e);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+}

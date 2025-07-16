@@ -1,5 +1,7 @@
 package com.example.layeredarchitecture.controller;
 
+import com.example.layeredarchitecture.BO.custom.ItemBOImpl;
+import com.example.layeredarchitecture.BO.custom.impl.ItemBO;
 import com.example.layeredarchitecture.Dao.custom.ItemDao;
 import com.example.layeredarchitecture.Dao.custom.impl.ItemDaoimpl;
 import com.example.layeredarchitecture.model.ItemDTO;
@@ -36,7 +38,7 @@ public class ManageItemsFormController {
     public TableView<ItemTM> tblItems;
     public TextField txtUnitPrice;
     public JFXButton btnAddNewItem;
-    ItemDao itemDaoimpl = new ItemDaoimpl();
+    ItemBO itemBO = new ItemBOImpl();
     public void initialize() {
         tblItems.getColumns().get(0).setCellValueFactory(new PropertyValueFactory<>("code"));
         tblItems.getColumns().get(1).setCellValueFactory(new PropertyValueFactory<>("description"));
@@ -72,7 +74,7 @@ public class ManageItemsFormController {
         try {
             /*Get all items*/
 
-         ArrayList<ItemDTO> itemDTOS = itemDaoimpl.getAll();
+         ArrayList<ItemDTO> itemDTOS = itemBO.getAllItem();
          for (ItemDTO itemDTO : itemDTOS) {
              tblItems.getItems().add(new ItemTM(
                      itemDTO.getCode(),
@@ -139,7 +141,7 @@ public class ManageItemsFormController {
                 new Alert(Alert.AlertType.ERROR, "There is no such item associated with the id " + code).show();
             }
 
-            itemDaoimpl.Delete(code);
+            itemBO.DeleteItem(code);
 
             tblItems.getItems().remove(tblItems.getSelectionModel().getSelectedItem());
             tblItems.getSelectionModel().clearSelection();
@@ -180,7 +182,7 @@ public class ManageItemsFormController {
                 }
                 //Save Item
 
-                itemDaoimpl.Save(new ItemDTO(code, description, unitPrice, qtyOnHand));
+                itemBO.SaveItem(new ItemDTO(code, description, unitPrice, qtyOnHand));
                 tblItems.getItems().add(new ItemTM(code, description, unitPrice, qtyOnHand));
 
             } catch (SQLException e) {
@@ -196,7 +198,7 @@ public class ManageItemsFormController {
                 }
                 /*Update Item*/
 
-              itemDaoimpl.update(new ItemDTO(description, unitPrice, qtyOnHand,code));
+              itemBO.UpdateItem(new ItemDTO(description, unitPrice, qtyOnHand,code));
 
                 ItemTM selectedItem = tblItems.getSelectionModel().getSelectedItem();
                 selectedItem.setDescription(description);
@@ -216,14 +218,14 @@ public class ManageItemsFormController {
 
     private boolean existItem(String code) throws SQLException, ClassNotFoundException {
 
-        return itemDaoimpl.exist(code);
+        return itemBO.ExistItem(code);
     }
 
 
     private String generateNewId() {
         try {
 
-        return   itemDaoimpl.Genaratenewid();
+        return   itemBO.GetNewIdItem();
         } catch (SQLException e) {
             new Alert(Alert.AlertType.ERROR, e.getMessage()).show();
         } catch (ClassNotFoundException e) {
