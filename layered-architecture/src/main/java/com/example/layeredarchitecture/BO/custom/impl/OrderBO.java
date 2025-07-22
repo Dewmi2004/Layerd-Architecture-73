@@ -1,5 +1,6 @@
 package com.example.layeredarchitecture.BO.custom.impl;
 
+import com.example.layeredarchitecture.BO.custom.SuperBO;
 import com.example.layeredarchitecture.model.CustomerDTO;
 import com.example.layeredarchitecture.model.ItemDTO;
 import com.example.layeredarchitecture.model.OrderDTO;
@@ -10,7 +11,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-public interface OrderBO {
+public interface OrderBO extends SuperBO {
     public String GetNewIdOrder() throws SQLException, ClassNotFoundException;
     public CustomerDTO searchCustomer(String s) throws SQLException, ClassNotFoundException;
     public ItemDTO searchItem(String s) throws SQLException, ClassNotFoundException;

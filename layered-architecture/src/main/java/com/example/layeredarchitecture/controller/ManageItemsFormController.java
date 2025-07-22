@@ -1,5 +1,6 @@
 package com.example.layeredarchitecture.controller;
 
+import com.example.layeredarchitecture.BO.custom.BOFactory;
 import com.example.layeredarchitecture.BO.custom.ItemBOImpl;
 import com.example.layeredarchitecture.BO.custom.impl.ItemBO;
 import com.example.layeredarchitecture.Dao.custom.ItemDao;
@@ -38,7 +39,7 @@ public class ManageItemsFormController {
     public TableView<ItemTM> tblItems;
     public TextField txtUnitPrice;
     public JFXButton btnAddNewItem;
-    ItemBO itemBO = new ItemBOImpl();
+    ItemBO itemBO = (ItemBO) BOFactory.getInstance().getBO(BOFactory.BOtypes.ITEM);
     public void initialize() {
         tblItems.getColumns().get(0).setCellValueFactory(new PropertyValueFactory<>("code"));
         tblItems.getColumns().get(1).setCellValueFactory(new PropertyValueFactory<>("description"));
