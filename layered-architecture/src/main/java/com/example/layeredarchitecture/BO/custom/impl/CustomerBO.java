@@ -1,6 +1,6 @@
 package com.example.layeredarchitecture.BO.custom.impl;
 
-import com.example.layeredarchitecture.BO.custom.SuperBO;
+import com.example.layeredarchitecture.BO.SuperBO;
 import com.example.layeredarchitecture.model.CustomerDTO;
 
 import java.sql.SQLException;

@@ -3,6 +3,8 @@ package com.example.layeredarchitecture.controller;
 import com.example.layeredarchitecture.BO.custom.BOFactory;
 import com.example.layeredarchitecture.BO.custom.OrderBOImpl;
 import com.example.layeredarchitecture.BO.custom.impl.OrderBO;
+import com.example.layeredarchitecture.entity.Customer;
+import com.example.layeredarchitecture.entity.Item;
 import com.example.layeredarchitecture.model.CustomerDTO;
 import com.example.layeredarchitecture.model.ItemDTO;
 import com.example.layeredarchitecture.model.OrderDetailDTO;
@@ -103,7 +105,7 @@ public class PlaceOrderFormController {
                                 new Alert(Alert.AlertType.ERROR, "There is no such customer associated with the id " + newValue + "").show();
                             }
 
-                            CustomerDTO customerDTO =  orderBO.searchCustomer(newValue + "");
+                            Customer customerDTO =  orderBO.searchCustomer(newValue + "");
 
                             txtCustomerName.setText(customerDTO.getName());
                         } catch (SQLException e) {
@@ -131,7 +133,7 @@ public class PlaceOrderFormController {
 //                        throw new NotFoundException("There is no such item associated with the id " + code);
                         }
 
-                        ItemDTO item = orderBO.searchItem(newItemCode + "");
+                        Item item = orderBO.searchItem(newItemCode + "");
 
                         txtDescription.setText(item.getDescription());
                         txtUnitPrice.setText(item.getUnitPrice().setScale(2).toString());
@@ -200,8 +202,8 @@ public class PlaceOrderFormController {
             try {
 
                 ArrayList<CustomerDTO> customerDTOS = orderBO.getAllCustomer();
-                for (CustomerDTO customerDTO1 : customerDTOS) {
-                    cmbCustomerId.getItems().add(customerDTO1.getId());
+                for (CustomerDTO entity : customerDTOS) {
+                    cmbCustomerId.getItems().add(entity.getId());
                 }
             } catch (SQLException e) {
                 new Alert(Alert.AlertType.ERROR, "Failed to load customer ids").show();
@@ -214,8 +216,8 @@ public class PlaceOrderFormController {
             try {
 
                 ArrayList<ItemDTO> itemDTOS = orderBO.getAllItem();
-                for (ItemDTO itemDTO : itemDTOS) {
-                    cmbItemCode.getItems().add(itemDTO.getCode());
+                for (ItemDTO entity : itemDTOS) {
+                    cmbItemCode.getItems().add(entity.getCode());
                 }
             } catch (SQLException e) {
                 new Alert(Alert.AlertType.ERROR, e.getMessage()).show();

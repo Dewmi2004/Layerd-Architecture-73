@@ -1,8 +1,10 @@
 package com.example.layeredarchitecture.BO.custom;
 
+//Factory Design Pattern -> Singleton Design Pattern Has Used To Create this Design Pattern
 
+import com.example.layeredarchitecture.BO.SuperBO;
 
-public class BOFactory {
+public class   BOFactory {
     //do it as homework
     private static BOFactory instance;
     public static BOFactory getInstance(){
